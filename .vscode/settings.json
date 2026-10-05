@@ -1,4 +1,8 @@
 {
+	//Run build tasks in Git Bash - ChibiOS rules.mk needs a POSIX shell (cat, mkdir -p)
+	"terminal.integrated.automationProfile.windows": {
+		"path": "C:/Program Files/Git/bin/bash.exe"
+	},
     "files.exclude": { //Exclude files from the explorer
 		"**/.dep": true,
 		"**/build/lst": true,
