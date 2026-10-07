@@ -133,6 +133,10 @@ static chibios_rt::ThreadReference slowThreadRef;
 
 void InitDevice()
 {
+    #if CAN_SLEEP
+    CaptureWakeSource(); // Before anything else reuses the top of RAM
+    #endif
+
     #if HAS_SE_LEDS
     Error::Initialize(&statusLed, &errorLed);
     #endif
@@ -282,6 +286,10 @@ void CyclicUpdate()
         for (uint8_t i = 0; i < NUM_KEYPADS; i++)
             keypad[i].CheckMsg(rxMsg);
         #endif
+
+        #if HAS_IGNITION
+        ignition.CheckMsg(rxMsg);
+        #endif
     }
 
     //=========================================================================
@@ -304,6 +312,9 @@ void CyclicUpdate()
 
     #if HAS_IGNITION
     ignition.Update();
+    // Stops every frame except replies to dingoConfig while the ignition waits to sleep.
+    // EnterSleep() sets it too, which must not be undone here.
+    SetCanTxQuiet(ignition.TxQuiet() || (eState == DeviceState::Sleep));
     #endif
 
     #if NUM_VIRT_INPUTS > 0
@@ -529,6 +540,12 @@ void InitVarMap()
     {
         pVarMap[index++] = &canMsg[i].fVal;
     }
+    #endif
+
+    // Added after the CAN messages, for the same reason as above
+    #if HAS_IGNITION
+    pVarMap[index++] = &ignition.fAccessory;
+    pVarMap[index++] = &ignition.fDash;
     #endif
 
     //VarMap size must match the expected size

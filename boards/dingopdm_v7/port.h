@@ -48,7 +48,7 @@
 #define VAR_MAP_SYS_VARS 5
 
 #define VAR_MAP_WIPER_VARS 6
-#define VAR_MAP_IGNITION_VARS 3
+#define VAR_MAP_IGNITION_VARS 5
 
 #define VAR_MAP_SIZE ( \
     VAR_MAP_SYS_VARS + \
@@ -71,7 +71,7 @@
 #define MAILBOX_SIZE 256
 #define DEVICE_THREAD_STACK 2048
 
-#define NUM_TX_MSGS 27
+#define NUM_TX_MSGS 28
 #define DEFAULT_BASE_ID 0x0DE
 
 #define ADC1_NUM_CHANNELS 8
