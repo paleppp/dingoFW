@@ -18,4 +18,5 @@ struct WakeRecord
 void EnterStopMode();
 bool TakeWakeRecord(WakeRecord *pRecord);
 void RequestBootloader();
+void RequestBootloaderCan(uint16_t nBaseId, uint8_t nCanSpeed);
 void CheckBootloaderRequest(void);
