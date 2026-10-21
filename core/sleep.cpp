@@ -115,10 +115,17 @@ void EnterSleep()
     // standby - which wakes this device straight back up whenever anything else
     // is on the bus.
     StopCan();
-    palSetLineMode(LINE_CAN_TX, PAL_MODE_OUTPUT_PUSHPULL);
-    palSetLine(LINE_CAN_TX); // Recessive
 
+    // Transceiver to standby first, so nothing the TX pin does from here on
+    // reaches the bus
     palSetLine(LINE_CAN_STANDBY); // CAN disabled
+
+    // Recessive before the pin turns into an output. Its output latch is low
+    // from reset, so switching the mode first drove the bus dominant for a
+    // fraction of a microsecond - long enough to wake every device already
+    // asleep, which then woke this one again.
+    palSetLine(LINE_CAN_TX);
+    palSetLineMode(LINE_CAN_TX, PAL_MODE_OUTPUT_PUSHPULL);
 
     // Let the transceiver settle in standby before any wake source is armed
     chThdSleepMilliseconds(20);
